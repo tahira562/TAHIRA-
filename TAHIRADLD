@@ -1,0 +1,48 @@
+#include <LiquidCrystal.h>
+
+// Set up the LCD columns and rows
+LiquidCrystal lcd(12, 11, 5, 4, 3, 2);
+
+const int trigPin = 9;
+const int echoPin = 8;
+
+void setup() {
+  // Initialize the LCD and set up the display
+  lcd.begin(16, 2);
+  lcd.print("Distance:");
+
+  // Initialize the pins
+  pinMode(trigPin, OUTPUT);
+  pinMode(echoPin, INPUT);
+
+  // Begin Serial for debugging
+  Serial.begin(9600);
+}
+
+void loop() {
+  // Send a pulse to trigger the sensor
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+
+  // Read the duration of the pulse returned
+  long duration = pulseIn(echoPin, HIGH);
+
+  // Calculate the distance in cm
+  int distance = duration * 0.034 / 2;
+
+  // Display distance on the LCD
+  lcd.setCursor(0, 1); // Start at the second row
+  lcd.print("Dist: ");
+  lcd.print(distance);
+  lcd.print(" cm  ");
+
+  // Print the distance to Serial Monitor (for debugging)
+  Serial.print("Distance: ");
+  Serial.print(distance);
+  Serial.println(" cm");
+
+  delay(500); // Refresh every 0.5 seconds
+}
